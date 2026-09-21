@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # 1. BD MySQL
+  db:
+    image: mysql:8.0
+    container_name: ecopontos_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecopontos_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql 
+
+  # 2. phpMyAdmin para você gerenciar o banco visualmente
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ecopontos_pma
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80" # acess em localhost:8080
+    depends_on:
+      - db
+
+  # 3.  API em Node.js
+  api:
+    build: ./backend # pasta backend
+    container_name: ecopontos_node
+    restart: always
+    ports:
+      - "3000:3000" # A API vai responder na porta 3000
+    volumes:
+      - ./backend:/app # espelhando sua pasta backend para dentro do container
+    depends_on:
+      - db
+    # nodemon para reiniciar o servidor Node sozinho quando você salvar o arquivo!
+    command: npx nodemon server.js 
+
+    # 4. Servidor Web para o Front-end
+  frontend:
+    image: nginx:alpine
+    container_name: ecopontos_front
+    restart: always
+    ports:
+      - "80:80" # acessar o site digitando apenas localhost
+    volumes:
+      - ./frontend:/usr/share/nginx/html # espelha sua pasta frontend para dentro do Nginx
+
+volumes:
+  db_data:
