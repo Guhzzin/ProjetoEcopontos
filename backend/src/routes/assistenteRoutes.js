@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const iaService = require('../services/iaService');
-const db = require('../db/mysql'); // Aquele arquivo isolado que criamos
+const db = require('../db/mysql'); // db
 
 router.post('/', async (req, res) => {
   try {
