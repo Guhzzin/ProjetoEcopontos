@@ -1,6 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 
-// Puxa a sua nova chave (AQ...) do arquivo .env (com o trim para limpar quebras de linha do Windows)
+// Puxa a nova chave (AQ...) do arquivo .env (com o trim para limpar quebras de linha do Windows)
 const apiKey = (process.env.GEMINI_API_KEY || "").trim();
 
 // Inicializa a IA usando o novo pacote
@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({ apiKey: apiKey });
 
 const analisarDescarte = async (perguntaUsuario) => {
     
-    //  garantimos o JSON diretamente nas instruções (prompt)
+    //  JSON diretamente nas instruções (prompt)
     const promptContexto = `Você é um assistente virtual especialista do Ecopontos Curitiba.
     Analise o item que o usuário quer descartar e responda ESTRITAMENTE em formato JSON puro, sem marcações markdown.
     
