@@ -16,7 +16,7 @@ services:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql 
 
-  # 2. phpMyAdmin para você gerenciar o banco visualmente
+  # 2. phpMyAdmin para gerenciar o banco visualmente
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: ecopontos_pma
@@ -40,6 +40,8 @@ services:
       - ./backend:/app # espelhando sua pasta backend para dentro do container
     depends_on:
       - db
+    env_file:  
+      - .env #ler a chave API_KEY do arquivo .env
     # nodemon para reiniciar o servidor Node sozinho quando você salvar o arquivo!
     command: npx nodemon server.js 
 

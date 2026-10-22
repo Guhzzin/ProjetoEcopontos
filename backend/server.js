@@ -11,6 +11,8 @@ app.use(cors()); // permitir que qualquer origem acesse a API
 app.use(express.json()); //interpretar JSON
 
 
+// Nova rota para o assistente inteligente
+const assistenteRoutes = require('./src/routes/assistenteRoutes');
 
 //criando a rota para buscar todos os ecopontos API
 
@@ -26,6 +28,8 @@ app.get('/api/ecopontos', (req, res)=> {
         }
     });
 });
+
+app.use('/api/assistente', assistenteRoutes); // usando rota do assistente
 
 //Config da porta do servidor
 const PORT = 3000;
