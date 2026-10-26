@@ -1,0 +1,81 @@
+ /* 1. tipografia  */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* fundo */
+            overflow: hidden; /* remove barra de rolagem */
+        }
+
+        /* 2. cores */
+        :root {
+            --brand-dark: #0b4b52;
+            --brand-light: #e2e8f0;
+        }
+
+        /* 3. classes customizadas */
+        .text-brand-dark {
+            color: var(--brand-dark) !important;
+        }
+        .letter-spacing-wide {
+            letter-spacing: 1px;
+        }
+
+        /* 4. estrutura do edge-to-edge */
+        .main-layout {
+            /* 76px é aproximadamente a altura da Navbar */
+            height: calc(100vh - 76px); 
+        }
+        
+        .sidebar {
+            z-index: 10;
+            overflow-y: auto; /* barra de rolagem SÓ para a lista, se tiver muitos endereços */
+            box-shadow: 4px 0 15px rgba(0,0,0,0.05); /* sombra lateral */
+        }
+
+        .map-wrapper {
+            background-color: var(--brand-light);
+            height: 100%;
+            width: 100%;
+        }
+
+        /* 5. barra de pesquisa customizada */
+        .search-box {
+            background-color: #f1f5f9;
+            border: 2px solid transparent;
+            transition: all 0.2s ease-in-out;
+        }
+        .search-box:focus {
+            background-color: #ffffff;
+            border-color: #198754; /* text-success do Bootstrap */
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+        }
+
+/* mobile */
+html, body {
+    height: auto !important;
+    overflow-x: hidden;
+    overflow-y: auto !important; /* garante scroll */
+}
+
+.app-wrapper, .app-row, .sidebar-container {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.map-container {
+    height: 50vh !important; /* mapa ocupa metade da tela */
+    min-height: 300px; 
+}
+
+/* pc e tablets */
+@media (min-width: 768px) {
+    html, body {
+        height: 100vh !important;
+        overflow: hidden !important; /* trava scroll global no PC */
+    }
+    .app-wrapper, .app-row, .map-container, .sidebar-container {
+        height: calc(100vh - 76px) !important; /* trava as colunas no tamanho da tela */
+    }
+    .sidebar-container {
+        overflow-y: auto !important; /* Cria a barra de rolagem APENAS na lista */
+    }
+}
