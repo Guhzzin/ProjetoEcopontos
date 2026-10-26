@@ -89,4 +89,3 @@ Erro "429 Rate Limit Exceeded" na IA: O Google Gemini possui um limite de requis
 
 Erro no Banco de Dados no primeiro carregamento: Ocasionalmente, o Node.js pode iniciar frações de segundo antes do MySQL estar pronto. O próprio Docker tentará reiniciar a conexão. Se a página não responder, rode docker-compose restart api.
 
-A pasta node_modules não veio junto? É normal! Ela está declarada no .gitignore para manter o projeto leve. O Docker cuida de baixá-la dinamicamente durante o docker-compose up --build.
