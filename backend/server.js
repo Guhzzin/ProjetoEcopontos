@@ -29,7 +29,7 @@ app.get('/api/ecopontos', (req, res)=> {
     });
 });
 
-app.use('/api/assistente', assistenteRoutes); // Rota para o assistente inteligente
+app.use('/api/assistente', assistenteRoutes); // usando rota do assistente
 
 //Config da porta do servidor
 const PORT = 3000;
