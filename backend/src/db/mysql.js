@@ -7,7 +7,8 @@ const db = mysql2.createPool({
     database: 'ecopontos_db',
     waitForConnections: true,
     connectionLimit: 10, 
-    queueLimit: 0 
+    queueLimit: 0,
+    charset: 'utf8mb4'
 });
 
 db.getConnection((err, connection) => {
