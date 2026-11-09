@@ -1,101 +1,203 @@
-<!doctype html>
-<html lang="en" data-bs-theme="light">
-    <head>
-        <title>Eco Pontos Curitiba</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecopontos Curitiba - Mapa Interativo e Assistente IA</title>
+    
+   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-        <!-- tipografia -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+        }
+        #map {
+            height: 68vh;
+            min-height: 460px;
+            width: 100%;
+            border-radius: 10px;
+            z-index: 1;
+        }
+        /* Estilo dos Ícones Personalizados no Mapa */
+        .custom-pin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: 2px solid #ffffff;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+        .custom-pin i {
+            transform: rotate(45deg);
+            color: #ffffff;
+            font-size: 16px;
+        }
+        /* Estilo do Chat */
+        #chat-box {
+            height: 250px;
+            overflow-y: auto;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .msg-user {
+            background-color: #198754;
+            color: white;
+            border-radius: 14px 14px 0 14px;
+            padding: 8px 12px;
+            max-width: 85%;
+            margin-left: auto;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+        .msg-ai {
+            background-color: #e9ecef;
+            color: #212529;
+            border-radius: 14px 14px 14px 0;
+            padding: 8px 12px;
+            max-width: 88%;
+            margin-right: auto;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+        .lista-locais-container {
+            max-height: 230px;
+            overflow-y: auto;
+        }
+        /* Barra de categorias rolável */
+        .categorias-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .categorias-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .categorias-bar::-webkit-scrollbar-thumb {
+            background: #ced4da;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
 
-        <!-- Bootstrap CSS local -->
-        <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Leaflet CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""
-        />
-
-        <!-- Leaflet JS -->
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="crossorigin="">
-        </script>
-
-        <!-- CSS -->
-        <link href="style.css" rel="stylesheet">
-
-    </head>
-
-    <body class="bg-light">
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-light bg-white py-3 shadow-sm position-relative" style="z-index: 20;">
-            <div class="container-fluid px-4 px-lg-5">
-                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                    <!-- Ícone  -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" 
-                        class="bi bi-recycle text-success" viewBox="0 0 16 16">
-                            <path d="M9.302 1.256a1.5 1.5 0 0 0-2.604 0l-1.704 2.98a.5.5 0 0 0 .869.497l1.703-2.981a.5.5 0 0 1 .868 0l2.54 4.444-1.256-.337a.5.5 0 1 0-.26.966l2.415.647a.5.5 0 0 0 .613-.353l.647-2.415a.5.5 0 1 0-.966-.259l-.333 1.242zM2.973 7.773l-1.255.337a.5.5 0 1 1-.26-.966l2.416-.647a.5.5 0 0 1 .612.353l.647 2.415a.5.5 0 0 1-.966.259l-.333-1.242-2.545 4.454a.5.5 0 0 0 .434.748H5a.5.5 0 0 1 0 1H1.723A1.5 1.5 0 0 1 .421 12.24zm10.89 1.463a.5.5 0 1 0-.868.496l1.716 3.004a.5.5 0 0 1-.434.748h-5.57l.647-.646a.5.5 0 1 0-.708-.707l-1.5 1.5a.5.5 0 0 0 0 .707l1.5 1.5a.5.5 0 1 0 .708-.707l-.647-.647h5.57a1.5 1.5 0 0 0 1.302-2.244z"/>
-                    </svg>                    
-                    <!-- mb-0 e fs-4 consertam a margem padrão da tag h2 dentro de links -->
-                    <h2 class="mb-0 fs-4 fw-bold text-brand-dark">EcoPontos Curitiba</h2>
-                </a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm mb-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
+                <i class="bi bi-recycle fs-4"></i> Ecopontos Curitiba
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <span id="status-modo" class="badge bg-light text-success">
+                    <i class="bi bi-map-fill me-1"></i> Exibindo todos os locais
+                </span>
+                <button id="btn-resetar-mapa" class="btn btn-warning btn-sm fw-semibold d-none">
+                    <i class="bi bi-arrow-counterclockwise"></i> Mostrar Todos no Mapa
+                </button>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- Conteúdo principal -->
-    <!-- Conteúdo principal -->
-<main class="container-fluid p-0 app-wrapper">
-    <!-- Adicionada a classe app-row e removido o h-100 -->
-    <div class="row g-0 app-row">
-
-        <!-- Col esquerda (em baixo no mobile, à esquerda no pc) -->
-        <div class="col-md-4 bg-white p-4 p-lg-5 sidebar-container d-flex flex-column shadow-sm order-2 order-md-1" style="z-index: 10;">            <!-- cabeçalho da coluna -->
-            <div class="mb-4">
-                <p class="text-success fw-bold text-uppercase small mb-2" style="letter-spacing: 1px;">Uma cidade mais sustentável</p>
-                <h2 class="fw-bold mb-3 text-brand-dark">Locais próximos</h2>
-                <p class="text-muted">Encontre os pontos de coleta mais próximos de você.</p>
-            </div>
-
-            <!-- barra de pesquisa -->
-            <input type="text" class="form-control form-control-lg mb-4 search-box border-0" style="background-color: #e2e8f0; border-radius: 8px;" placeholder="Digite o bairro:">
+    <!-- Principal -->
+    <div class="container pb-4">
+        <div class="row g-3">
             
-            <!-- lista dinâmica -->
-            <div class="list-group list-group-flush mt-2 flex-grow-1">
-                <h6 class="text-muted mb-3">Ecopontos (12)</h6>
-                <a href="#" class="list-group-item list-group-item-action py-3 px-0 border-bottom">
-                    <h6 class="mb-1 fw-bold text-brand-dark">Exemplo 1</h6>
-                    <small class="text-muted">Água Verde</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action py-3 px-0 border-bottom">
-                    <h6 class="mb-1 fw-bold text-brand-dark">Exemplo 2</h6>
-                    <small class="text-muted">Matriz</small>
-                </a>
+            <!-- Coluna da Direita (no Desktop fica em destaque) -->
+            <div class="col-lg-7 order-lg-2">
+                <div class="card shadow-sm border-0 p-3">
+                    
+                    <!-- Modo 1: Barra de Exploração Manual por Categorias -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold small text-secondary text-uppercase">
+                                <i class="bi bi-funnel-fill text-success"></i> Explorar Mapa por Tipo de Resíduo:
+                            </span>
+                            <input 
+                                type="text" 
+                                id="busca-manual-input" 
+                                class="form-control form-control-sm w-50" 
+                                placeholder="Buscar por nome do ecoponto ou resíduo..."
+                            >
+                        </div>
+                        <div id="botoes-categorias" class="categorias-bar">
+                            <button class="btn btn-sm btn-success active" data-categoria="todos">
+                                <i class="bi bi-globe-americas me-1"></i>Todos
+                            </button>
+                            <!-- Botões dinâmicos gerados via JS a partir do banco -->
+                        </div>
+                    </div>
+
+                    <!-- Container do Mapa Leaflet -->
+                    <div id="map"></div>
+                </div>
             </div>
 
-            <!-- mini rodapé -->
-            <div class="mt-auto pt-3 border-top text-muted small d-flex justify-content-between align-items-center">
-                <span>&copy; EcoPontos Curitiba</span>
-                <span>Projeto Acadêmico &middot; <a href="https://github.com/EcoPontosCuritiba" target="_blank" class="text-success text-decoration-none fw-bold">GitHub</a></span>
-            </div>
-        </div>
-
-        <!-- Col direita (por cima no mobile, à direita no pc) --> 
-        <div class="col-md-8 position-relative map-container order-1 order-md-2">            
-            <div id="div-do-mapa" class="w-100 h-100 d-flex align-items-center justify-content-center" style="background-color: #e2e8f0;">
+            <!-- Coluna da Esquerda: Lista de Pontos + Chat IA -->
+            <div class="col-lg-5 order-lg-1 d-flex flex-column gap-3">
                 
+                <!-- Card 1: Lista Interativa de Locais Visíveis no Mapa -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center py-2">
+                        <span><i class="bi bi-geo-alt-fill text-success me-1"></i> Locais no Mapa</span>
+                        <span id="contador-locais" class="badge bg-success rounded-pill">0</span>
+                    </div>
+                    <div class="card-body p-0 lista-locais-container">
+                        <ul id="lista-ecopontos" class="list-group list-group-flush">
+                            <li class="list-group-item text-muted text-center py-4">
+                                Carregando pontos de descarte...
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Assistente Inteligente Gemini -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white fw-bold text-success d-flex justify-content-between align-items-center py-2">
+                        <span><i class="bi bi-stars fs-5 me-1"></i> Em dúvida? Pergunte à IA</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">Gemini</span>
+                    </div>
+                    <div class="card-body p-3">
+                        <div id="chat-box" class="mb-2">
+                            <div class="msg-ai">
+                                Você pode <strong>clicar diretamente nos ícones do mapa</strong> ao lado ou usar os filtros acima.<br><br>
+                                Se não souber como ou onde descartar algo específico (ex: <em>"Tenho pilhas estufadas e óleo usado"</em>), digite abaixo que eu filtro o mapa para você!
+                            </div>
+                        </div>
+
+                        <form id="chat-form" class="d-flex gap-2">
+                            <input 
+                                type="text" 
+                                id="pergunta-input" 
+                                class="form-control form-control-sm" 
+                                placeholder="Ex: Onde jogar fora um micro-ondas quebrado?" 
+                                required 
+                                autocomplete="off"
+                            >
+                            <button type="submit" id="btn-enviar" class="btn btn-success btn-sm px-3">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
+
         </div>
-
     </div>
-</main>
 
-        <!-- Bootstrap JavaScript -->
-        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-        <!-- JS da aplicação -->
-        <script src="app.js"></script>
-    </body>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+    <script src="app.js"></script>
+</body>
 </html>
