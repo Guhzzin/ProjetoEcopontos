@@ -9,7 +9,8 @@ CREATE TABLE pontos_coleta (
     longitude DOUBLE NULL,
     latitude DOUBLE NULL,
     horario_funcionamento VARCHAR(255) NOT NULL,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo_gestao ENUM('publica', 'privada') NOT NULL DEFAULT 'publica'
 );
 
 INSERT INTO pontos_coleta (nome, endereco_completo, tipo_residuo, longitude, latitude, horario_funcionamento) VALUES 
@@ -25,3 +26,8 @@ INSERT INTO pontos_coleta (nome, endereco_completo, tipo_residuo, longitude, lat
 ('Ecoponto Campo de Santana', 'R. Teresa De Freitas Tavares, 331 - Campo De Santana', 'mistos ou reciclavel', -25.579708, -49.327669, '8-12 e 13-17'),
 ('Ecoponto Érico Veríssimo', 'R. Cap. Amin Mosse, 557 - Alto Boqueirão', 'mistos ou reciclavel', -25.532033, -49.251294, '8-12 e 13-17'),
 ('Ecoponto Vila Nova', 'R. Ten. Cel. Vilagran Cabrita, 2495 - Alto Boqueirão', 'mistos ou reciclavel', -25.529422, -49.230470, '8-12 e 13-17');
+
+INSERT INTO pontos_coleta(nome, endereco_completo, tipo_residuo, longitude, latitude, horario_funcionamento, tipo_gestao) VALUES
+('Ecoponto Ecologitec', 'R. Batista da Costa, 322 - Xaxim', 'Mistos', -49.284267, -25.512162, '08-18h', 'privado'),
+('BR Aparas', 'Estr. do Ganchinho, 2981 - Umbará', 'Reciclável', -49.268864, -25.559543, '7:30-17:30h', 'privado'),
+('Transeduc Ambiental', 'R. Cap. Dr. Antônio José, 608 - Xaxim', 'Mistos', -49.275340, -25.504740, '08-18h', 'privado');

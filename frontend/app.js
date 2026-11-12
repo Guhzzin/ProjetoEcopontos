@@ -47,14 +47,14 @@ const chatBox = document.getElementById('chat-box');
 
 // 4. ÍCONES POR TIPO DE RESÍDUO
 
-function criarIconePersonalizado(tipoResiduo = '') {
-    const tipo = tipoResiduo.toLowerCase();
-    let cor = '#0b99eb'; // Verde (Recicláveis / Geral)
-    let icone = 'bi-recycle';
+function criarIconePersonalizado(tipoGestao = '') {
+    const gestao = tipoGestao.toLowerCase();
+    let cor = '#2cca0d'; // Verde (publico)
+    let icone = 'bi-bus-front';
 
-    if (tipo.includes('mistos') || tipo.includes('pilha') || tipo.includes('bateria')) {
-        cor = '#1468e7';
-        icone = 'bi-cpu-fill';
+    if (gestao.includes('privad') ) {
+        cor = '#15dbe9';
+        icone = 'bi-briefcase-fill';
     }
 
     return L.divIcon({
@@ -100,11 +100,12 @@ function renderizarNoMapa(locais, ajustarZoom = true) {
 
             const nome = corrigirTexto(local.nome);
             const endereco = corrigirTexto(local.endereco_completo);
+            const tipoGestao = corrigirTexto(local.tipo_gestao);
             const tipoResiduo = corrigirTexto(local.tipo_residuo);
             const horario = corrigirTexto(local.horario_funcionamento);
 
             const marker = L.marker([lat, lng], {
-                icon: criarIconePersonalizado(tipoResiduo)
+                icon: criarIconePersonalizado(tipoGestao)
             });
 
             const popupHtml = `
@@ -115,6 +116,9 @@ function renderizarNoMapa(locais, ajustarZoom = true) {
                     <div class="mb-2">
                         <span class="badge bg-success-subtle text-success border border-success-subtle">
                             Aceita: ${tipoResiduo}
+                        </span>
+                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                            Gestão: ${tipoGestao}
                         </span>
                     </div>
                     <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
