@@ -50,7 +50,7 @@ const chatBox = document.getElementById('chat-box');
 function criarIconePersonalizado(tipoGestao = '') {
     const gestao = tipoGestao.toLowerCase();
     let cor = '#2cca0d'; // Verde (publico)
-    let icone = 'bi-bus-front';
+    let icone = 'bi-people-fill';
 
     if (gestao.includes('privad') ) {
         cor = '#15dbe9';
@@ -319,9 +319,10 @@ chatForm.addEventListener('submit', async (event) => {
 
         const data = await response.json();
 
-        const msgIA = data.mensagem || (data.ia && data.ia.mensagem) || 'Confira no mapa os pontos indicados:';
-        const categoriaIA = data.categorias_chave || (data.ia && data.ia.categorias_chave) || null;
-        const locaisDaIA = data.locais || data.ecopontos || data.pontos_coleta || [];
+        const msgIA = data.texto_assistente || 'Confira no mapa os pontos indicados:';
+        const categoriaIA = data.categoria || null;
+        const locaisDaIA = data.pontos_no_mapa || [];
+        const tipoGestaoIA = data.tipo_gestao || null;
 
         adicionarMensagemChat(msgIA, 'ai', categoriaIA);
         atualizarStatusTopo(`Recomendação da IA (${locaisDaIA.length} locais)`, true);

@@ -18,7 +18,8 @@ const analisarDescarte = async (perguntaUsuario) => {
       "categorias_chave": ["palavra-chave"]
     }
     
-    Para a 'categorias_chave', use APENAS UMA destas opções exatas: 'reciclavel', 'mistos', 'eletrônico', 'óleo', 'pilhas', 'baterias' ou 'lâmpadas'.
+    Para a 'categorias_chave', use APENAS UMA destas opções exatas: 'reciclavel' ou 'mistos'.
+    Para a 'tipo_gestao', use APENAS UMA destas opções exatas: 'publico' ou 'privado'.
     
     Pergunta do usuário: ${perguntaUsuario}`;
 

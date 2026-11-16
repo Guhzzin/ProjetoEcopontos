@@ -12,10 +12,11 @@ router.post('/', async (req, res) => {
     
     //  IA não identificar nada, busca por "mistos"
     const palavraChave = respostaIA.categorias_chave[0] || 'mistos';
+    const TipoGestao = respostaIA.tipo_gestao || 'publico'; // Default para 'publico' se não for fornecido
 
     // Procura na tabela usando LIKE para encontrar a palavra no meio do texto
     const query = `
-      SELECT nome, latitude, longitude, endereco_completo 
+      SELECT *
       FROM pontos_coleta 
       WHERE tipo_residuo LIKE ?
     `;
@@ -25,7 +26,10 @@ router.post('/', async (req, res) => {
 
     res.json({
       texto_assistente: respostaIA.mensagem,
-      pontos_no_mapa: ecopontosRecomendados
+      pontos_no_mapa: ecopontosRecomendados,
+      categoria: palavraChave,
+      tipo_gestao: TipoGestao
+
     });
 
   } catch (error) {
